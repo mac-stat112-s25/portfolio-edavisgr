@@ -3,3 +3,186 @@ title: "Bivariate Viz"
 ---
 
 Use this file for practice with the **bivariate viz** in-class activity.  Refer to the class website for details.
+```{r}
+# Load data
+elections <- read.csv("https://mac-stat.github.io/data/election_2020_county.csv")
+
+library(tidyverse)
+
+# Check it out
+head(elections)
+```
+
+## Excercise 0: Review
+
+### Part a
+How many, or roughly what percent, of the 3000+ counties did the Republican candidate win in 2020?
+
+- Take a guess.
+- Then make a plot of the winner variable.
+- Then discuss what follow-up questions you might have (and that our data might help us answer).
+
+### Part b
+
+The repub_pct_20 variable provides more detail about the Republican support in each county. Construct a plot of repub_pct_20.
+
+Notice that the distribution of Republican support from county to county is slightly **left skewed** or **negatively skewed.**
+
+What follow-up questions do you have?
+
+## Excercise 2.2 Quantitative Variables
+
+``` {r}
+# Set up the plotting frame
+# How does this differ than the frame for our histogram of repub_pct_20 alone?
+ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16))
+
+# Add a layer of points for each county
+# Take note of the geom!
+ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16)) +
+  geom_point()
+
+# Change the shape of the points
+# What happens if you change the shape to another number?
+ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16)) +
+  geom_point(shape = 3)
+
+# YOU TRY: Modify the code to make the points "orange"
+# NOTE: Try to anticipate if "color" or "fill" will be useful here. Then try both.
+ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16)) +
+  geom_point(color = "orange")
+```
+``` {r}
+# Add a layer that represents each county by the state it's in
+# Take note of the geom and the info it needs to run!
+ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16)) +
+  geom_text(aes(label = state_abbr))
+```
+## Exercise 3: Reflect
+Summarize the relationship between the Republican support in 2020 and 2016. Be sure to comment on:
+
+- the strength of the relationship (weak/moderate/strong)
+- the direction of the relationship (positive/negative)
+- outliers (in what state do counties deviate from the national trend? Any ideas why this might be the case?)
+
+## Excercise 4: Visualizing trend
+``` {r}
+ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16)) +
+  geom_point() +
+  geom_smooth()
+```
+### Part a
+Construct a new plot that contains the model smooth but does not include the individual point glyphs.
+
+### Part b
+By default, geom_smooth() adds a smooth, localized model line. To examine the “best” linear model, we can specify method = "lm". It’s pretty similar in this example!
+```{r}
+ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+## Exercise 5: Your Turn
+
+To examine how the 2020 results are related to some county demographics, construct scatterplots of repub_pct_20 vs median_rent, and repub_pct_20 vs median_age. Summarize the relationship between these two variables and comment on which is the better predictor of repub_pct_20, median_rent or median_age.
+```{R}
+# Scatterplot of repub_pct_20 vs median_rent
+
+
+
+# Scatterplot of repub_pct_20 vs median_age
+```
+
+## Exercise 6: A Sad Scatterplot
+``` {r} 
+ggplot(elections, aes(y = repub_pct_20, x = historical)) +
+  geom_point()
+```
+## Exercise 7: Quantitative vs Categorical – Violins & Boxes
+
+``` {r}
+# Side-by-side violin plots
+ggplot(elections, aes(y = repub_pct_20, x = historical)) +
+  geom_violin()
+
+# Side-by-side boxplots (defined below)
+ggplot(elections, aes(y = repub_pct_20, x = historical)) +
+  geom_boxplot()
+```
+
+## Exercise 8: Quantitative vs Categorical – Intuition Check
+
+``` {r}
+ggplot(elections, aes(x = repub_pct_20)) +
+  geom_density()
+```
+
+## Exercise 9: Quantitative vs Categorical – Density Plots
+
+``` {r}
+# the key is confusing because the colors dont match their labels
+ggplot(elections, aes(x = repub_pct_20, fill = historical)) +
+  geom_density()
+
+# change the order of colors
+ggplot(elections, aes(x = repub_pct_20, fill = historical)) +
+  geom_density() +
+  scale_fill_manual(values = c("blue", "purple", "red"))
+
+# make the opacity different
+# Play around with different values of alpha, between 0 and 1
+ggplot(elections, aes(x = repub_pct_20, fill = historical)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c("blue", "purple", "red"))
+
+# What does facet_wrap do?! separates them so they dont overlap
+ggplot(elections, aes(x = repub_pct_20, fill = historical)) +
+  geom_density() +
+  scale_fill_manual(values = c("blue", "purple", "red")) +
+  facet_wrap(~ historical)
+
+# Let's try a similar grouping strategy with a histogram instead of density plot.
+# Why is this terrible? a huge eyesore and hard to understand data
+ggplot(elections, aes(x = repub_pct_20, fill = historical)) +
+  geom_histogram(color = "white") +
+  scale_fill_manual(values = c("blue", "purple", "red"))
+```
+## Exercise 10
+We’ve now learned 3 (of many) ways to visualize the relationship between a quantitative and categorical variable: side-by-side violins, boxplots, and density plots.
+
+- Which do you like best?
+- What is one pro of density plots relative to boxplots?
+- What is one con of density plots relative to boxplots?
+
+## Exercise 11: Categorical vs Categorical – Intuition Check
+``` {r}
+# Plot 1: adjust this to recreate the top plot
+ggplot(elections, aes(x = historical)) +
+  geom_bar()
+
+# Plot 2: adjust this to recreate the bottom plot
+ggplot(elections, aes(x = winner_20)) +
+  geom_bar()
+```
+
+## Exercise 12: Categorical vs Categorical
+
+``` {r}
+# A stacked bar plot
+# How are the "historical" and "winner_20" variables mapped to the plot, i.e. what roles do they play?
+ggplot(elections, aes(x = historical, fill = winner_20)) +
+  geom_bar()
+
+# A faceted bar plot
+ggplot(elections, aes(x = winner_20)) +
+  geom_bar() +
+  facet_wrap(~ historical)
+
+# A side-by-side bar plot
+# Note the new argument to geom_bar
+ggplot(elections, aes(x = historical, fill = winner_20)) +
+  geom_bar(position = "dodge")
+
+# A proportional bar plot
+# Note the new argument to geom_bar
+ggplot(elections, aes(x = historical, fill = winner_20)) +
+  geom_bar(position = "fill")

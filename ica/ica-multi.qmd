@@ -3,3 +3,79 @@ title: "Mulivariate Viz"
 ---
 
 Use this file for practice with the **mulivariate viz** in-class activity.  Refer to the class website for details.
+
+```{r}
+library(ggplot2)
+```
+
+## The Story
+``` {r}
+# Import and check out data
+education <- read.csv("https://mac-stat.github.io/data/sat.csv")
+head(education)
+```
+## Exercise 1: SAT scores
+### Part a
+Construct a plot of how the average sat scores vary from state to state. (Just use 1 variable – sat not State!)
+
+### Part b
+Summarize your observations from the plot. Comment on the basics: range, typical outcomes, shape. (Any theories about what might explain this non-normal shape?)
+
+## Exercise 2: SAT Scores vs Per Pupil Spending & SAT Scores vs Salaries
+The first question we’d like to answer is: Can the variability in sat scores from state to state be partially explained by how much a state spends on education, specifically its per pupil spending (expend) and typical teacher salary?
+
+part 1
+```{r}
+ggplot(education, aes(x=sat, y=expend)) + geom_smooth(method= "lm")
+```
+part 2
+
+```{r}
+ggplot(education, aes(x=sat, y=salary)) + geom_smooth(method= "lm")
+```
+
+## Exercise 3: SAT Scores vs Per Pupil Spending and Teacher Salaries
+Construct one visualization of the relationship of sat with salary and expend. HINT: Start with just 2 variables and tweak that code to add the third variable. Try out a few things!
+
+```{r}
+ggplot(education, aes(x=sat, y=expend, 
+                    color=salary)) + geom_point()
+```
+
+## Exercise 4: Another way to Incorporate Scale
+It can be tough to distinguish color scales and size scales for quantitative variables. Another option is to discretize a quantitative variable, or basically cut it up into categories.
+
+Construct the plot below. Check out the code and think about what’s happening here. What happens if you change “2” to “3”?
+
+```{r}
+ggplot(education, aes(x=sat)) + geom_density()
+```
+
+
+```{r}
+ggplot(education, aes(y = sat, x = salary, color = cut(expend, 3))) + 
+  geom_point() + 
+  geom_smooth(se = FALSE, method = "lm")
+```
+
+## Exercise 5: Finally an Explanation
+It’s strange that SAT scores seem to decrease with spending. But we’re leaving out an important variable from our analysis: the fraction of a state’s students that actually take the SAT. The fracCat variable indicates this fraction: low (under 15% take the SAT), medium (15-45% take the SAT), and high (at least 45% take the SAT).
+
+```{r}
+ggplot(education, aes(x=frac))
+```
+
+### Part a
+Build a univariate viz of fracCat to better understand how many states fall into each category.
+
+### Part b
+Build 2 bivariate visualizations that demonstrate the relationship between sat and fracCat. What story does your graphic tell and why does this make contextual sense?
+
+### Part c
+Make a trivariate visualization that demonstrates the relationship of sat with expend AND fracCat. Highlight the differences in fracCat groups through color AND unique trend lines. What story does your graphic tell?
+Does it still seem that SAT scores decrease as spending increases?
+
+### Part d
+Putting all of this together, explain this example of Simpson’s Paradox. That is, why did it appear that SAT scores decrease as spending increases even though the opposite is true?
+
+

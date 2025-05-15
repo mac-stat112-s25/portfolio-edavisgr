@@ -3,3 +3,89 @@ title: "Univariate Viz"
 ---
 
 Use this file for practice with the **univariate viz** in-class activity.  Refer to the class website for details.
+
+```{r}
+# Import data
+hikes <- read.csv("https://mac-stat.github.io/data/high_peaks.csv")
+```
+## Excercise 1
+- What features would we like a visualization of the categorical difficulty rating variable to capture?
+- What about a visualization of the quantitative elevation variable?
+```{r}
+head(hikes)
+```
+##Exercise 2: Load tidyverse
+```{r}
+# Load the package
+library(tidyverse)
+```
+##Exercise 3: Bar Chart of Ratings - Part 1
+- How many hikes fall into each category?
+- Are the hikes evenly distributed among these categories, or are some more common than others?
+```{r}
+ggplot(hikes, aes(x = rating))
+```
+Think about:
+
+- What did this do? What do you observe?
+- What, in general, is the first argument of the ggplot() function?
+- What is the purpose of writing x = rating?
+- What do you think aes stands for?!?
+##Exercise 4: Bar Chart of Ratings - Part 2
+``` {r}
+# added geoem_bar() and bars appeared!
+ggplot(hikes, aes(x = rating)) +
+  geom_bar()
+# added x=rating and y=number of hikes and it changed the labels of the x and y axes
+ggplot(hikes, aes(x = rating)) +
+  geom_bar() +
+  labs(x = "Rating", y = "Number of hikes")
+# added fill blue and low and behold it filled blue
+ggplot(hikes, aes(x = rating)) +
+  geom_bar(fill = "blue") +
+  labs(x = "Rating", y = "Number of hikes")
+# added color=orange and it gave an orange outline
+ggplot(hikes, aes(x = rating)) +
+  geom_bar(color = "orange", fill = "blue") +
+  labs(x = "Rating", y = "Number of hikes")
+# added theme_minimal and it mader the background white instead of grey
+ggplot(hikes, aes(x = rating)) +
+  geom_bar(color = "orange", fill = "blue")  +
+  labs(x = "Rating", y = "Number of hikes") +
+  theme_minimal()
+```
+
+## Exercise 5: Bar Chart Follow-up
+### Part a
+
+Reflect on the ggplot() code.
+
+- What’s the purpose of the +? When do we use it? *to add a seperate command in the same line of code*
+- We added the bars using geom_bar()? Why “geom”?
+- What does labs() stand for?
+- What’s the difference between color and fill? *fill "fills" the color in, while color creates an outline*
+
+### Part b
+In general, bar charts allow us to examine the following properties of a categorical variable:
+
+- **observed categories**: What categories did we observe? *difficult, easy, and moderate*
+- **variability between categories**: Are observations evenly spread out among the categories, or are some categories more common than others? *moderate is most common, then easy, then difficult*
+
+We must then *translate* this information into the *context* of our analysis, here hikes in the Adirondacks. Summarize below what you learned from the bar chart, in context.
+
+*most people (almost 30) go on moderate hikes, and the least amount of people (less than 10) go on difficult hikes*
+
+### Part c
+
+Is there anything you don’t like about this barplot? For example: check out the x-axis again.
+
+*i dont like that the order is not easy to difficult.*
+
+## Exercise 6: Sad Bar Chart
+
+```{r}
+ggplot(hikes, aes(x = elevation)) +
+  geom_bar(color = "pink", fill = ("pink")) + 
+  labs(x = "elevation", y = "Number of hikes") +
+  theme_minimal()
+```

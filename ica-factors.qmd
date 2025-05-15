@@ -1,0 +1,51 @@
+---
+title: "ica-factors"
+format: html
+---
+
+```{r}
+library(tidyverse)
+
+# Get rid of some duplicate rows!
+grades <- read.csv("https://mac-stat.github.io/data/grades.csv") |> 
+  distinct(sid, sessionID, .keep_all = TRUE)
+
+# Check it out
+head(grades)
+
+grade_distribution <- grades |> 
+  count(grade)
+
+head(grade_distribution)
+```
+```{r}
+grade_distribution |> 
+  ggplot(aes(x = grade, y = n)) +
+    geom_col()
+```
+
+
+```{r}
+grade_distribution |>
+  mutate(grade = fct_reorder(grade, n)) |>
+  ggplot(aes(x = grade, y = n)) +
+    geom_col()
+```
+
+```{r}
+grade_distribution |>
+  mutate(grade = fct_reorder(grade, n, .desc = TRUE)) |>
+  ggplot(aes(x = grade, y = n)) +
+    geom_col()
+```
+
+## Exercise 2
+
+```{r}
+grade_distribution |>
+  mutate(grade = fct_relevel(grade, c("A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "NC", "S", "AU"))) |>
+  mutate(grade = fct_recode(grade, "Satisfactory" = "S", "Audit" = "AU")) |>  # Multiple pieces go into the last 2 blanks
+  ggplot(aes(x = grade, y = n)) +
+    geom_col()
+```
+

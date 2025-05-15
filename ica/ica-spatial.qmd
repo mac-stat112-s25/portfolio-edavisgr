@@ -3,3 +3,137 @@ title: "Spatial Viz"
 ---
 
 Use this file for practice with the **spatial viz** in-class activity.  Refer to the class website for details.
+
+```{r}
+library(leaflet)
+```
+
+## Exercise 1: A leaflet with markers / points
+
+```{r}
+fave_places <- read.csv("https://hash-mac.github.io/stat112site-s25/data/our_fave_places.csv")
+
+# Check it out
+head(fave_places)
+```
+
+### part a 
+```{r}
+# Load the leaflet package
+library(leaflet)
+
+# Just a plotting frame
+leaflet(data = fave_places)
+
+```
+
+```{r}
+# Now what do we have?
+leaflet(data = fave_places) |>
+  addTiles()
+
+```
+
+```{r}
+# Now what do we have?
+# longitude and latitude refer to the variables in our data
+leaflet(data = fave_places) |>
+  addTiles() |>
+  addMarkers(lng = ~longitude, lat = ~latitude)
+
+```
+
+
+```{r}
+# Since we named them "longitude" and "latitude", the function
+# automatically recognizes these variables. No need to write them!
+leaflet(data = fave_places) |>
+  addTiles() |>
+  addMarkers()
+```
+
+### part b
+
+
+## Exercise 2: Details
+
+```{r}
+# Load package needed to change color
+library(gplots)
+
+# We can add colored circles instead of markers at each location
+leaflet(data = fave_places) |>
+  addTiles() |>
+  addCircles(color = col2hex("red"))
+
+```
+
+```{r}
+# We can change the background
+# Mark locations with yellow dots
+# And connect the dots, in their order in the dataset, with green lines
+# (These green lines don't mean anything here, but would if this were somebody's travel path!)
+leaflet(data = fave_places) |>
+  addProviderTiles("USGS") |>
+  addCircles(weight = 10, opacity = 1, color = col2hex("yellow")) |>
+  addPolylines(
+    lng = ~longitude,
+    lat = ~latitude,
+    color = col2hex("green")
+  )
+
+```
+In general:
+
+- addProviderTiles() changes the base map.
+To explore all available provider base maps, type providers in the console. (Though some don’t work :/)
+
+- Use addMarkers() or addCircles() to mark locations. Type ?addControl into the console to pull up a help file which summarizes the aesthetics of these markers and how you can change them. For example:
+
+- weight = how thick to make the lines, points, pixels
+- opacity = transparency (like alpha in ggplot2)
+- colors need to be in “hex” form. We used the col2hex() function from the gplots library to do that
+
+## Exercise 3: My turn
+```{r}
+# Install dplyr if not already installed
+install.packages("dplyr")
+
+# Load dplyr
+library(dplyr)
+
+```
+
+
+```{r}
+# Load the dataset
+starbucks <- read.csv("https://mac-stat.github.io/data/starbucks.csv")
+
+# Inspect the column names to ensure correct ones
+print(colnames(starbucks))
+
+# Assuming 'State.Province' is the correct column, filter for Minnesota stores
+starbucks_mn <- starbucks |>
+  filter(Country == "US", State.Province == "MN")
+
+# Check if the filtering worked
+any(starbucks_mn$State.Province == "MN")
+
+# Create the leaflet map if the filtering worked
+leaflet(data = starbucks_mn) |>
+  addTiles() |>
+  addMarkers(lng = ~Longitude, lat = ~Latitude)
+
+
+```
+
+
+## Part 2: Static Points on a Map
+
+### create a simple scatterplot of all starbucks locations
+
+```{r}
+ggplot(starbucks, aes(x = Longitude, y = Latitude)) +
+  geom_point(alpha = 0.2, size = 0.2)
+```
+
