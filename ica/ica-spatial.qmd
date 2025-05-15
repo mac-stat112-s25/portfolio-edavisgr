@@ -5,7 +5,16 @@ title: "Spatial Viz"
 Use this file for practice with the **spatial viz** in-class activity.  Refer to the class website for details.
 
 ```{r}
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+
+```
+
+```{r}
 library(leaflet)
+library(gplots)
+library(dplyr)
+library(ggplot2)
+
 ```
 
 ## Exercise 1: A leaflet with markers / points
@@ -130,7 +139,7 @@ leaflet(data = starbucks_mn) |>
 
 ## Part 2: Static Points on a Map
 
-### create a simple scatterplot of all starbucks locations
+
 
 ```{r}
 ggplot(starbucks, aes(x = Longitude, y = Latitude)) +
